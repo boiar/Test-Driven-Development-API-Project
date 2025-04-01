@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\TodoListController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -38,3 +39,7 @@ Route::prefix('todo-list-tasks')->group(function () {
     Route::delete('destroy/{id}', [TaskController::class, 'destroy'])->name('task.destroy');
     Route::patch('change_status/{id}', [TaskController::class, 'changeStatus'])->name('task.change_status');
 });
+
+
+Route::post('/register', [AuthController::class, 'register'])->name('user.register');
+Route::post('/login', [AuthController::class, 'login'])->name('user.login');
