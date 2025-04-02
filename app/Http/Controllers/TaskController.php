@@ -27,7 +27,7 @@ class TaskController extends Controller
            'title' => 'required',
         ]);
 
-        $list = Task::create(['todo_list_id' => $request->todo_list_id, 'title' => $request->title]);
+        $list = Task::create($request->all());
         return response($list, 201);
     }
 

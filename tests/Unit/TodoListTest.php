@@ -16,8 +16,8 @@ class TodoListTest extends TestCase
     public function test_a_todo_list_can_has_many_tasks()
     {
 
-        $todo_obj = TodoList::factory()->create();
-        $task_obj = Task::factory()->create(['todo_list_id' => $todo_obj->id, 'title' => 'first task title']);
+        $todo_obj = $this->createTodoList();
+        $task_obj = $this->createTask(['todo_list_id' => $todo_obj->id, 'title' => 'first task title']);
 
 
         $this->assertInstanceOf(Collection::class, $todo_obj->tasks);
@@ -27,9 +27,8 @@ class TodoListTest extends TestCase
 
     public function test_if_todo_list_deleted_then_all_its_tasks_will_be_deleted()
     {
-        // Arrange: Create two separate todo lists
-        $todo_obj = TodoList::factory()->create();
-        $another_todo_obj = TodoList::factory()->create(); // Separate todo list
+        $todo_obj = $this->createTodoList();
+        $another_todo_obj =  $this->createTodoList();
 
         $task_obj = Task::factory()->create(['todo_list_id' => $todo_obj->id, 'title' => 'first task title']);
         $another_task_obj = Task::factory()->create(['todo_list_id' => $another_todo_obj->id, 'title' => 'another task title']);

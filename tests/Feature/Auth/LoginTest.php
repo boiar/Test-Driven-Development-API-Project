@@ -1,11 +1,11 @@
 <?php
 
-namespace Feature\Auth;
+namespace Tests\Feature\Auth;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 use Illuminate\Support\Facades\Hash;
+use Tests\TestCase;
 
 
 class LoginTest extends TestCase
@@ -15,7 +15,7 @@ class LoginTest extends TestCase
 
     public function test_user_can_login_with_email_and_password()
     {
-        User::factory()->create([
+        $this->createUser([
             'email' => 'john@doe.com',
             'password' => Hash::make('password') // Ensure the password is hashed
         ]);
@@ -26,8 +26,8 @@ class LoginTest extends TestCase
             'password' => 'password',
         ])->assertOk();
 
-        $response->assertStatus(200) // Should be successful
-                 ->assertJsonStructure(['token']); // Ensure token is returned
+        $response->assertStatus(200);
+         $this->assertArrayHasKey('token', $response->json());
 
     }
 
@@ -43,7 +43,7 @@ class LoginTest extends TestCase
     public function test_if_user_password_is_not_valid_then_return_error()
     {
 
-        User::factory()->create([
+        $this->createUser([
             'email' => 'john@doe.com',
             'password' => Hash::make('password') // Ensure the password is hashed
         ]);

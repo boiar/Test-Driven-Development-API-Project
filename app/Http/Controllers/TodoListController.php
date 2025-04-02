@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\TodoList;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TodoListController extends Controller
 {
     public function index()
     {
-        $lists = TodoList::all();
+        $lists = TodoList::where('user_id', Auth::id())->get();
         return response($lists);
 
 
@@ -23,11 +24,16 @@ class TodoListController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required',
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
         ]);
-        $list = TodoList::create(['name' => $request->name]);
-        return response($list, 201);
+
+        // Create a single record with user_id
+        $list = Auth::user()->todo_lists()->create([
+           'name' => $validated['name'],
+        ]);
+
+        return response()->json($list, 201);
     }
 
     public function update(Request $request, $id)

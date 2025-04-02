@@ -19,7 +19,7 @@ class Task extends Model
     public const CANCELED    = 4;
 
     protected $fillable = [
-        'todo_list_id', 'title', 'status'
+        'todo_list_id', 'title', 'status', 'desc', 'label_id'
     ];
 
 

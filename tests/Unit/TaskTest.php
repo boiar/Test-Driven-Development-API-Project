@@ -16,9 +16,9 @@ class TaskTest extends TestCase
     public function test_task_belongs_to_todo_list()
     {
 
-        $todo_obj = TodoList::factory()->create();
+        $list = $this->createTodoList();
 
-        $task_obj = Task::factory()->create(['todo_list_id' => $todo_obj->id, 'title' => 'first task title']);
+        $task_obj = Task::factory()->create(['todo_list_id' => $list->id, 'title' => 'first task title']);
 
 
         $this->assertInstanceOf(TodoList::class, $task_obj->todoList);

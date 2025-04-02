@@ -11,32 +11,40 @@ class TodoListTest extends TestCase
 {
 
     use RefreshDatabase;
-    /**
-     * A basic feature test example.
-     */
+
+    private $list;
+
+    public function setUp():void
+    {
+        parent::setUp();
+        $user = $this->authUser();
+        $this->list = $this->createTodoList([
+            'name' => 'my list',
+            'user_id' => $user->id
+        ]);
+
+    }
+
     public function test_fetch_todo_lists(): void
     {
         // preparation (prepare)
-        TodoList::factory()->count(2)->create();
 
 
         //action (perform)
         $response = $this->getJson(route('todo-list.index'));
 
         // assertion (predict)
-        $this->assertCount(2, $response->json());
+        $this->assertCount(1, $response->json());
     }
 
 
     public function test_single_fetch_todo_list(): void
     {
         // preparation (prepare)
-        $todo_obj = TodoList::factory()->create();
-
+        $todo_obj = $this->list;
 
         //action (perform)
         $response = $this->getJson(route('todo-list.show', $todo_obj->id));
-
 
         // assertion (predict)
         $response->assertStatus(200);
@@ -47,11 +55,10 @@ class TodoListTest extends TestCase
     public function test_store_new_todo_list(): void
     {
         // preparation (prepare)
-        $list = TodoList::factory()->make();
+        $list = $this->list;
 
         //action (perform)
-        $response = $this->postJson(route('todo-list.store'), ['name' => $list->name]);
-
+        $response = $this->postJson(route('todo-list.store'), ['name' => $list->name, 'user_id' => $list->user_id]);
 
         // assertion (predict)
         $response->assertCreated();
@@ -59,7 +66,6 @@ class TodoListTest extends TestCase
         $this->assertEquals($list->name, $response->json()['name']);
         $this->assertDatabaseHas('todo_lists', ['name' => $list->name]);
     }
-
 
 
     public function test_while_storing_todo_list_name_field_is_required(): void
@@ -79,7 +85,7 @@ class TodoListTest extends TestCase
     public function test_delete_todo_list(): void
     {
         // preparation (prepare)
-        $list = TodoList::factory()->create();
+        $list = $this->list;
 
         //action (perform)
         $response = $this->deleteJson(route('todo-list.destroy', $list->id));
@@ -93,7 +99,7 @@ class TodoListTest extends TestCase
     public function test_update_todo_list(): void
     {
         // preparation (prepare)
-        $list = TodoList::factory()->create();
+        $list = $this->createTodoList();
 
         //action (perform)
         $response = $this->patchJson(route('todo-list.update', $list->id), ['name' => 'updated name list']);

@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
             $table->string('title');
+            $table->text('desc')->nullable();
             $table->tinyInteger('status')->default(\App\Models\Task::NOT_STARTED);
             $table->timestamps();
-
+            $table->foreignId('label_id')->nullable()->constrained();
 
             $table->foreignId('todo_list_id')
                   ->constrained()

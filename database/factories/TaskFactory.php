@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Label;
 use App\Models\TodoList;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -21,6 +22,10 @@ class TaskFactory extends Factory
             'title' => fake()->name(),
             'todo_list_id' => function () {
                 return TodoList::factory()->create()->id;
+            },
+            'desc' => $this->faker->paragraph(),
+            'label_id' => function () {
+                return Label::factory()->create()->id;
             },
         ];
     }
